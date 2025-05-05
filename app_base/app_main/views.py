@@ -19,7 +19,7 @@ class CommentListView(View):
 
         if not comments:   
             comments_query = Comment.objects.filter(parent__isnull=True).select_related('user').order_by(order_by)
-            paginator = Paginator(comments_query, 5)
+            paginator = Paginator(comments_query, 25)
             page_obj = paginator.get_page(page_number)
 
             cache.set(cache_key, page_obj, timeout=600) 
