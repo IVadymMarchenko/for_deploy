@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <!-- Мета-теги -->
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="app, landing, corporate, Creative, Html Template, Template">
+    <meta name="author" content="web-themes">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Заголовок страницы -->
+    <title>recent comment section</title>
+
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="{% static 'app_main/base.css' %}" rel="stylesheet" type="text/css" />
+        
+
+    <link href="{% static 'app_main/lightbox.css' %}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <!-- Показываем кнопку, которая открывает модалку комментария -->
+    <button class="add-comment-btn" onclick="document.getElementById('commentModal').style.display='block'">Add Comment</button>
+{% else %}
+    <!-- Показываем кнопку, которая открывает модалку входа -->
+    <button class="add-comment-btn" onclick="document.getElementById('loginModal').style.display='block'">Add Comment</button>
+{% endif %}
+
+    <!-- Контейнер для всех элементов -->
+    <div class="container">
+        <!-- Кнопки -->
+
+        <!-- Заголовок раздела комментариев -->
+        <h2>Comments</h2>
+        <div class="comment-actions">
+        {% if not user.is_authenticated %}
+        <button class="modal-btn" onclick="openModal('loginModal')">Login</button>
+        <button class="modal-btn" onclick="openModal('signupModal')">Registration</button>
+        {%else%}
+        <form method="post" action="{% url 'user:logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% endif %}
+        </div>
+
+        <!-- Панель сортировки -->
+        <div class="sort-container">
+            <form method="get">
+                <label for="sort_by">Order by:</label>
+                <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+                    <option value="-dateAdded" {% if sort_by == "-dateAdded" %}selected{% endif %}>Date Added (newest)</option>
+                    <option value="dateAdded" {% if sort_by == "dateAdded" %}selected{% endif %}>Date Added (oldest)</option>
+                    <option value="userName" {% if sort_by == "userName" %}selected{% endif %}>User Name</option>
+                    <option value="email" {% if sort_by == "email" %}selected{% endif %}>E-mail</option>
+                </select>
+            </form>
+            
+        </div>
+
+        <!-- Начало первого комментария -->
+       
+            <div id="comments-container">
+                {% include "app_comments/comments.html" %}
+            </div>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if comments.has_previous %}
+                    <a href="?page=1{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">&laquo; first</a>
+                    <a href="?page={{ comments.previous_page_number }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ comments.number }} of {{ comments.paginator.num_pages }}.
+                </span>
+                {% if comments.has_next %}
+                    <a href="?page={{ comments.next_page_number }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">next</a>
+                    <a href="?page={{ comments.paginator.num_pages }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        <!-- Конец третьего комментария -->
+
+        <!-- Кнопка для добавления комментария -->
+       
+
+    </div>
+
+    <!-- Модальное окно для добавления комментария -->
+    {% include "app_comments/add_comment.html" %}
+
+    <!-- Модальное окно для ответа на комментарий -->
+    {% include "app_comments/form_reply.html" %}
+
+
+    <!-- Модалка логина -->
+    {% include "app_users/login.html" %}
+
+
+     <!-- Модалка регистрации -->
+    {% include "app_users/registr_form.html" %} 
+
+
+    {% if not request.user.is_authenticated %}
+    <script src="{% static 'app_main/auth_form.js' %}"></script>
+    {% endif %}
+
+    <!-- Подключение JavaScript -->
+    <script src="{% static 'app_main/add_comments.js' %}"></script>
+    <script src="{% static "app_main/lightbox-plus-jquery.js" %}"></script>
+    <script src="{% static 'app_main/auth.js' %}"></script>
+    <script src="{% static 'app_main/base.js' %}"></script>
+    <script src="{% static 'app_main/reply_comment.js' %}"></script>
+    <script src="{% static 'app_main/js_for_addtags.js' %}"></script>
+    <script src="{% static 'app_comments/more_data.js' %}"></script>
+    <script src="{% static 'app_main/delete_comment.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</body>
+
+</html>

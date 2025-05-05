@@ -1,0 +1,37 @@
+
+<!-- Модалка логина -->
+<div id="loginModal" class="modal-overlay" onclick="outsideClick(event, 'loginModal')">
+    <div class="modal-container">
+        <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+        <div class="modal-wrapper">
+         
+            {% if messages %}
+            <ul class="messages" id="message-container">
+              {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                  {{ message }}
+                </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <div id="modal-info-message" class="info-message">
+              To write comments you need to log in or register.
+          </div>
+            {% endif %}
+            <h1>Login</h1>
+            
+            <form action="" method="post" id="login-form" data-url="{% url 'user:login' %}" class="modal-form">
+                {% csrf_token %}
+                <input type="email" class="modal-input" name="email" placeholder="email" required />
+                
+                <input type="password" name="password" class="modal-input" placeholder="password" autocomplete="new-password"
+                    required />
+                    <div class="non-field-errors" style="color: red; margin-top: 10px;"></div>
+                <button class="modal-submit" type="submit">Sign In</button> 
+            </form>
+            <div class="modal-links">
+                Not a member? <a href="#" onclick="switchModal('loginModal', 'signupModal')">register now</a>
+            </div>
+        </div>
+    </div>
+</div>
