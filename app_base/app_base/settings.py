@@ -128,10 +128,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+REDIS_URL = os.environ.get('REDIS_URL')
+print("REDIS_URL:", os.environ.get('REDIS_URL'))
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-         'LOCATION': 'redis://redis:6379/1',  
+        'LOCATION': REDIS_URL,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
