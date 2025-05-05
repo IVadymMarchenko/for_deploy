@@ -129,7 +129,7 @@ USE_I18N = True
 USE_TZ = True
 
 REDIS_URL = os.environ.get('REDIS_URL')
-print("REDIS_URL:", os.environ.get('REDIS_URL'))
+
 
 CACHES = {
     'default': {
@@ -140,11 +140,7 @@ CACHES = {
         }
     }
 }
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
